@@ -1,4 +1,4 @@
-* include
+# include
 A framework for pulling in secondary required files within code.
 It keeps track of previously requested files, based on their resolved
 absolute path, so they only load once. By default it loads js, css, json, and html,
@@ -19,7 +19,7 @@ Static methods for more details.
         the file is loaded.
 - @returns Promise
 
-** when loading js files,
+## when loading js files,
  - same-origin files loaded with options.store set to true will be loaded
    via fetch and inserted as inline code.
  - all other requests will load via <script src> attribute
@@ -31,7 +31,7 @@ Resolved promises and/or callbacks will recieve true, or any object
 registered with include.register by the loaded script.
 
 
-** When loading css files,
+## When loading css files,
  - same-origin files loaded with options.store set to true will be loaded
    via fetch and inserted in an inline <style> tag.
  - all other requests will load via a <link> tag
@@ -40,7 +40,7 @@ registered with include.register by the loaded script.
 
 Resolved promises and/or callbacks will recieve true
 
-** When loading html files,
+## When loading html files,
  - files will be loaded via fetch, so be aware of CORS conscerns.
 
 Resolved promises and/or callbacks will recieve a documentFragment containing
@@ -51,13 +51,13 @@ the parsed file content.
 Resolved promises and/or callbacks will recieve a js object containing
 the parsed file content.
 
-** When loading text/unknown file types,
+## When loading text/unknown file types,
  - files will be loaded via fetch, so be aware of CORS conscerns.
 
 Resolved promises and/or callbacks will recieve the file content.
 
 
-** USAGE:
+## USAGE:
 ```js
 //simple usage. asyncrounously load another file.
 include('filename.js');
@@ -91,9 +91,10 @@ include('filename.js',{store:true,expires:false,version:3}[,callback]);
 //specify file types (see include.typeLoader for more info)
 include('/some/api/endpoint/','json'[,callback]);
 
-/*
-STATIC METHODS:
-*/
+
+```
+##STATIC METHODS:
+```js
 // include.next
 // return a wrapper function to chain includes
 // as a callback -- will fire on success or fail.
