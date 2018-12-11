@@ -152,18 +152,50 @@ include.defaultOptions({
  ```
 You can also set type specific options. These will be override/inherit global default values at runtime.
 ```js
- include.defaultOption(option, 'javasctipt');
+ include.defaultOption(options, 'javascript');
 ```
-*NOTE:* these options can be overriden in the include options object.
+*NOTE:* these options can be overridden in the include options object.
 
 ###include.typeLoader
-define a custom loader script
+define a custom loader script.
 (include already handles 'script', 'style', 'html', 'json', and 'text' types by default)
+@param typeName: String or Array. the text value(s) to identify this loader with
+      Type names are case insensitive, so 'HTML' and 'html' will both match the
+      same loader.
+@param loader: Function, or String.
+      if a String, must match ther name of an existing loader.
+      if a Function, loader need to take in the following 4 arguments:
+       - filename: String. The file to load.
+             this will already be run through `include.extendedUrl`
+       - options: Object, a merging of any passed in options, type specific defaults,
+            and global defaultsd
+       - resolve: Function. The method to call to resolve the outer promise.
+             Expects a return a value
+       - reject: Function. The method to call to reject the outer promise,
+             Expects an error object.
+
+For convenience, `include` will attempt to 'guess' the type by file extension, and will check
+against sub-extensions as well, so including `filename.part.hbt.html` will check for a
+`part.hbt.html` loader,  then a  `hbt.html` loader, then finally check for a `html` loader,
+if the previous two don't exist.
+
 ```js
-include.typeLoader('typeName', function typeLoader(filename, options, resolve , reject) { ... });
-//also send an array of pseudonyms for a single typeLoader
-include.typeLoader(['template','partial','handlebars'], function typeLoader(filename, options, resolve , reject) { ... });
-// or set a synonym for an existing typeLoader
+include.typeLoader('typeName',
+  function typeLoader(filename, options, resolve , reject) {
+    include.fetch(filename,options).then(
+      function(contents) {
+        var returnVal = doStuffWith(contents);
+        resolve(returnValue);
+      },
+      reject
+    );
+  }
+});
+//optionally send an array of pseudonyms for a single typeLoader
+include.typeLoader(['template','handlebars','hbt.html'],
+  function typeLoader(filename, options, resolve , reject) {...}
+);
+// or set a synonym/file extension for an existing typeLoader
 include.typeLoader('mjs','script');
 ```
 NOTE: to take advantage of localStorage caching, use include.fetch to do the actual file loading.
@@ -187,7 +219,8 @@ unlike native fetch, it will return the text value of the file and fail if respo
 ```js
 include.fetch('filename.xml'[,{options}]).then(function(text) {...});
 ```
-NOTE: it will store the file as per default type settings unless overridden in the options object
+*NOTE*: it will store the file as per default type settings unless overridden in
+        the options object
 
 ###include.flush
 flush the entire cache if need be
@@ -199,7 +232,7 @@ or just specific files.
 include.flush('filename.js'[[,...],'filename-n.js']);
 ```
 ###include.filenames
-obtain a list of included filenames
+obtain a list of previously included filenames
 ```js
 var fileNames = include.filenames();
 //include pending filenames

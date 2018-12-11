@@ -223,8 +223,18 @@
     }
     //filename is pending or hasn't been included yet.
     else {
-      type = type === '?' ? filename.toLowerCase().slice(filename.lastIndexOf('.') + 1) : type.toLowerCase();
-      type = masterType[type] || 'text';
+      if (type = '?') {
+        var extensions = filename.toLowerCase().split('.');
+        // allow type resolvers to have multiple parts
+        // so 'template.html' will be different than 'js'
+        do {
+          extensions.shift();
+          type = masterType[extensions.join('.')];
+        } while (!type && extensions.length || type = 'text')
+      }
+      else {
+        type = masterType[type.toLowerCase()] || 'text';
+      }
       var typeResolver = types[type];
       options = getDefaultOptions(options || {}, type);
       //return the pending promise or a new Promise
