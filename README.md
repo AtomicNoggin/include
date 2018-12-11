@@ -88,9 +88,9 @@ include('filename.js',{store:true,expires:false,version:3}[,callback]);
 //specify file types (see include.typeLoader for more info)
 include('/some/api/endpoint/','json'[,callback]);
 ```
-##STATIC METHODS:
+## STATIC METHODS:
 
-###include.next
+### include.next
 return a wrapper function to chain includes
 as a callback -- will fire on success or fail.
 ```js
@@ -100,7 +100,7 @@ include('filename.js')
  .then(include.next('needs-filename.js'[,type][,options][,callbackFunc]))
  .then(function() {console.log('fires after needs-filename.js is loaded')});
 ```
-###include.polyfill
+### include.polyfill
 assert-like function that will optionally load a file if the first argument resolves to false
 otherwice return a resolved promise and optionally fire any callback provided
 ```js
@@ -108,7 +108,7 @@ include.polyfill(window.customElements,'my-polyfill.js'[,type][,options][,callba
    doStuff();
 });
 ```
-###include.register
+### include.register
 have the loaded script register itself, so files included via <script src="">
 can avoid being double loaded. and optionally specify a result object (or method).
 ```
@@ -117,7 +117,7 @@ include.register('/full/path/to/filename.js'[,{'result':'object','including':fun
 ```
 NOTE: filename paths are resolved relative to the fromPath value. Use the full path to register.
 
-###include.defer
+### include.defer
 have the loaded script manually stall it's registration, so it can control
 when external scripts depending on it are notified.
 ensure that include.register gets called to release the delay.
@@ -129,14 +129,14 @@ include('/full/path/to/another/filename.js').then(function() {
 ```
 NOTE: filename paths are resolved relative to the fromPath value. Use the full path to register.
 
-####include.defaultPath
+#### include.defaultPath
 set the default path to resolve includes from
 uses `location.href` is not specified
 ```js
 include.defaultPath('/path/to/includes');
 ```
 
-###include.defaultOptions
+### include.defaultOptions
 set default settings for file fetching
 ```js
 include.defaultOptions({
@@ -156,7 +156,7 @@ You can also set type specific options. These will be override/inherit global de
 ```
 *NOTE:* these options can be overridden in the include options object.
 
-###include.typeLoader
+### include.typeLoader
 define a custom loader script.
 (include already handles 'script', 'style', 'html', 'json', and 'text' types by default)
 @param typeName: String or Array. the text value(s) to identify this loader with
@@ -200,20 +200,20 @@ include.typeLoader('mjs','script');
 ```
 NOTE: to take advantage of localStorage caching, use include.fetch to do the actual file loading.
 
-###include.extendedUrl
+### include.extendedUrl
 resolve a filename to it's absolute path.
 will not include the origin if file and page are on the same server.
 ```js
 var absolute = include.extendedUrl('filename.js');
 ```
 
-###include.retrieve
+### include.retrieve
 fetch a returned object directly
 ```js
 var result = include.retrieve('filename.js');
 ```
 
-###include.fetch
+### include.fetch
 load a file and return a promise. Useful for creating new typeLoaders
 unlike native fetch, it will return the text value of the file and fail if response.ok is false.
 ```js
@@ -222,7 +222,7 @@ include.fetch('filename.xml'[,{options}]).then(function(text) {...});
 *NOTE*: it will store the file as per default type settings unless overridden in
         the options object
 
-###include.flush
+### include.flush
 flush the entire cache if need be
 ```js
 include.flush();
@@ -231,7 +231,7 @@ or just specific files.
 ```js
 include.flush('filename.js'[[,...],'filename-n.js']);
 ```
-###include.filenames
+### include.filenames
 obtain a list of previously included filenames
 ```js
 var fileNames = include.filenames();
