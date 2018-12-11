@@ -6,21 +6,21 @@ but can be extended to load any other text file. See `include.typeLoader` and
 `include.fetch` static methods for details.
 
 The package optionally uses fetch API to load the scripts and can be configured
-to store them in localStorgae for faster return visits. See defaultOptions in the
+to store them in localStorgae for faster return visits. See `defaultOptions` in the
 Static methods for more details.
-- @param filename String or Array of strings. location of the file or files to
+- @param filename String or Array of strings. Location of the file or files to
         include (relative to the default path)
 - @param type Optional String. File type to load. "js", "css", "html", "json",
         and "txt" handled out of box. Uses the file extension to 'guess' at
-        the file type if omited or return the loaded text if it can't resolve
+        the file type if omitted or return the loaded text if it can't resolve
         to a known type.
 - @param options Optional hashmap. Options used by typeLoader.
-- @param callback Optional function. node-style (error first) method to call once
+- @param callback Optional Function. node-style (error first) method to call once
         the file is loaded.
 - @returns Promise
 
 ## when loading js files,
- - same-origin files loaded with options.store set to true will be loaded
+ - same-origin files loaded with `options.store` set to true will be loaded
    via fetch and inserted as inline code.
  - all other requests will load via `<script src>` attribute
  - optionally specify the parent node to insert script into with
@@ -115,7 +115,7 @@ can avoid being double loaded. and optionally specify a result object (or method
 include.register('/full/path/to/filename.js'[,{'result':'object','including':function method() {}}])
 // return objects will get passed to the Promise and/or callback as a success object
 ```
-NOTE: filename paths are resolved relative to the fromPath value. Use the full path to register.
+*NOTE:* filename paths are resolved relative to the fromPath value. Use the full path to register.
 
 ### include.defer
 have the loaded script manually stall it's registration, so it can control
@@ -127,7 +127,7 @@ include('/full/path/to/another/filename.js').then(function() {
    include.register('/full/path/to/filename.js');
 })
 ```
-NOTE: filename paths are resolved relative to the fromPath value. Use the full path to register.
+*NOTE:* filename paths are resolved relative to the fromPath value. Use the full path to register.
 
 #### include.defaultPath
 set the default path to resolve includes from
@@ -144,10 +144,10 @@ include.defaultOptions({
          // no effect on older browsers due to polyfill limitations
    cache: 'default' , //see fetch Request.cache documentation https://developer.mozilla.org/en-US/docs/Web/API/Request/cache
          // no effect on older browsers due to polyfill limitations
-   store: true|false, //store the file contents in localStorage, initilaizes to false
-   version: int, //refresh stored file if it's version is lower than this version. intializes to 0
+   store: true|false, //store the file contents in localStorage, initializes to false
+   version: int, //refresh stored file if it's version is lower than this version. initializes to 0
    expires: true|false|int, //whether or not to refresh stored files after a specified number of seconds.
-         // if true, defaults to 48 hours. initilaizes to true.
+         // if true, defaults to 48 hours. initializes to true.
  });
  ```
 You can also set type specific options. These will be override/inherit global default values at runtime.
@@ -159,20 +159,21 @@ You can also set type specific options. These will be override/inherit global de
 ### include.typeLoader
 define a custom loader script.
 (include already handles 'script', 'style', 'html', 'json', and 'text' types by default)
-@param typeName: String or Array. the text value(s) to identify this loader with
+
+ - @param typeName: String or Array. the text value(s) to identify this loader with
       Type names are case insensitive, so 'HTML' and 'html' will both match the
       same loader.
-@param loader: Function, or String.
-      if a String, must match ther name of an existing loader.
-      if a Function, loader need to take in the following 4 arguments:
+ - @param loader: Function, or String.
+   - if a String, must match ther name of an existing loader.
+   - if a Function, loader need to take in the following 4 arguments:
        - filename: String. The file to load.
-             this will already be run through `include.extendedUrl`
+         this will already be run through `include.extendedUrl`
        - options: Object, a merging of any passed in options, type specific defaults,
-            and global defaultsd
+         and global defaultsd
        - resolve: Function. The method to call to resolve the outer promise.
-             Expects a return a value
+         Expects a return a value
        - reject: Function. The method to call to reject the outer promise,
-             Expects an error object.
+         Expects an error object.
 
 For convenience, `include` will attempt to 'guess' the type by file extension, and will check
 against sub-extensions as well, so including `filename.part.hbt.html` will check for a
