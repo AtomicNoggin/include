@@ -226,7 +226,7 @@
       if (type = '?') {
         var extensions = filename.toLowerCase().split('.');
         // allow type resolvers to have multiple parts
-        // so 'template.html' will be different than 'js'
+        // so 'template.html' will be different than 'html'
         do {
           extensions.shift();
           type = masterType[extensions.join('.')];
