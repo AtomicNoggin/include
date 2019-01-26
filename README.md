@@ -24,7 +24,7 @@ Static methods for more details.
    via fetch and inserted as inline code.
  - all other requests will load via `<script src>` attribute
  - optionally specify the parent node to insert script into with
-   options.parent, otherwise it will use the parent node of the
+   `options.parent`, otherwise it will use the parent node of the
    first script tag in the page.
 
 Resolved promises and/or callbacks will receive true, or any object
@@ -32,25 +32,25 @@ registered with `include.register` by the loaded script.
 
 
 ## When loading css files,
- - same-origin files loaded with options.store set to true will be loaded
+ - same-origin files loaded with `options.store` set to true will be loaded
    via fetch and inserted in an inline <style> tag.
  - all other requests will load via a <link> tag
  - optionally specify the parent node to insert script into with
-   options.parent, otherwise it will use the HEAD tag
+   `options.parent`, otherwise it will use the HEAD tag
 
 Resolved promises and/or callbacks will recieve true
 
 ## When loading html files,
- - files will be loaded via fetch, so be aware of CORS conscerns.
+ - files will be loaded via fetch, so be aware of CORS concerns.
  - Resolved promises and/or callbacks will receive a documentFragment containing
    the parsed file content.
 ## When loading json files,
- - files will be loaded via fetch, so be aware of CORS conscerns.
+ - files will be loaded via fetch, so be aware of CORS concerns.
  - Resolved promises and/or callbacks will receive a js object containing the
    parsed file content.
 
 ## When loading text/unknown file types,
- - files will be loaded via fetch, so be aware of CORS conscerns.
+ - files will be loaded via fetch, so be aware of CORS concerns.
  - Resolved promises and/or callbacks will receive the file content.
 
 
@@ -144,7 +144,8 @@ include.defaultOptions({
          // no effect on older browsers due to polyfill limitations
    cache: 'default' , //see fetch Request.cache documentation https://developer.mozilla.org/en-US/docs/Web/API/Request/cache
          // no effect on older browsers due to polyfill limitations
-   store: true|false, //store the file contents in localStorage, initializes to false
+   store: true|false|'local'|'session', //store the file contents in localStorage, initializes to false
+                                        //optionally specify local or session storage.
    version: int, //refresh stored file if it's version is lower than this version. initializes to 0
    expires: true|false|int, //whether or not to refresh stored files after a specified number of seconds.
          // if true, defaults to 48 hours. initializes to true.

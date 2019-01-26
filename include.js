@@ -126,7 +126,7 @@
         include.fetch(filename, options,'text').then(resolve, reject);
       }
     },
-    storage;
+    localStorage,sessionStorage;
   function getDefaultOptions(options, type) {
     var keys;
     if (type && masterType[type] && typeDefaults[masterType[type]]) {
@@ -154,12 +154,14 @@
 
   try {
     //accessing localStorage in data:, about:, or file: schemas throws an error
-    storage = localStorage;
+    localStorage = localStorage;
+    sessionStorage = sessionStorage;
     //on the off chance this browser doesn't have localstorage, this will throw too.
-    storage.getItem('foo');
+    localStorage.getItem('foo');
+    sessionStorage.getItem('foo');
   } catch (e) {
     //if localStorage isn't a thing, create dummy methods.
-    storage = {
+    localStorage = sessionStorage = {
       'getItem': function() {
         return null
       },
@@ -283,11 +285,11 @@
   scope.include.extendedUrl = function includeExtendedUrl(filename) {
     return new URL(filename, defaultPath).href.replace(sameOrigin, '');
   }
-  //update default options. Optionally send type specific defaults
+  //update default options. Optionally set type specific defaults
   scope.include.defaultOptions = function includeDefaultOptions(options, type) {
     if (options) {
       var keys = Object.keys(options);
-      var defs = type === String(type) && masterType[type.toLowerCase()] ? typeDefaults[masterType[type.toLowerCase()]] : defaults;
+      var defs = type === ''+type && masterType[type.toLowerCase()] ? typeDefaults[masterType[type.toLowerCase()]] : defaults;
       for (i = 0; i < keys.length; i++) {
         if (options.hasOwnProperty[keys[i]]) {
           defs[keys[i]] = options[keys[i]];
@@ -402,6 +404,7 @@
   //load a file using the fetch api. Thows an error for 4xx & 5xx staus codes.
   scope.include.fetch = function includeFetch(filename, options, type) {
     options = getDefaultOptions(options || {}, type);
+    var storage = (store == ''+store && store.toLowerCase() === 'session' ? sessionStorage : localStorage);
     if (options.store &&
       (stored = storage.getItem(filename))) {
       if ((options.version && options.version <= stored.version) ||
