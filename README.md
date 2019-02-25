@@ -22,7 +22,7 @@ Static methods for more details.
 ## when loading js files,
  - same-origin files loaded with `options.store` set to true will be loaded
    via fetch and inserted as inline code.
- - all other requests will load via `&lt;script src&gt;` attribute
+ - all other requests will load via `<script src>` attribute
  - optionally specify the parent node to insert script into with
    `options.parent`, otherwise it will use the parent node of the
    first script tag in the page.
@@ -33,8 +33,8 @@ registered with `include.register` by the loaded script.
 
 ## When loading css files,
  - same-origin files loaded with `options.store` set to true will be loaded
-   via fetch and inserted in an inline `&lt;style&gt;` tag.
- - all other requests will load via a `&lt;link&gt;` tag
+   via fetch and inserted in an inline `<style>` tag.
+ - all other requests will load via a `<link src>` tag
  - optionally specify the parent node to insert script into with
    `options.parent`, otherwise it will use the HEAD tag
 
@@ -109,7 +109,7 @@ include.polyfill(window.customElements,'my-polyfill.js'[,type][,options][,callba
 });
 ```
 ### include.register
-have the loaded script register itself, so files included via `&gt;script src=""&lt;`
+have the loaded script register itself, so files included via `<script src="">`
 can avoid being double loaded. and optionally specify a result object (or method).
 ```
 include.register('/full/path/to/filename.js'[,{'result':'object','including':function method() {}}])
