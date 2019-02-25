@@ -232,7 +232,7 @@
         do {
           extensions.shift();
           type = masterType[extensions.join('.')];
-        } while (!type && extensions.length || type = 'text')
+        } while (!type && extensions.length || (type = 'text'))
       }
       else {
         type = masterType[type.toLowerCase()] || 'text';
@@ -305,7 +305,7 @@
     } else {
       if (!Array.isArray(filename)) {
         filename = scope.include.extendedUrl(filename);
-        if (typeof included[filename] !== 'undefined')) {
+        if (typeof included[filename] !== 'undefined') {
           check = included[filename];
         }
         promise = Promise.resolve(check);
