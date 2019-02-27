@@ -111,7 +111,7 @@ include.polyfill(window.customElements,'my-polyfill.js'[,type][,options][,callba
 ### include.register
 have the loaded script register itself, so files included via `<script src="">`
 can avoid being double loaded. and optionally specify a result object (or method).
-```
+```js
 include.register('/full/path/to/filename.js'[,{'result':'object','including':function method() {}}])
 // return objects will get passed to the Promise and/or callback as a success object
 ```
