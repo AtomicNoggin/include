@@ -34,13 +34,14 @@
         i.async = i.defer = true;
         //can't fetch/store external scripts
         if (options.store && !filename.match(/^(http|file)/)) {
-          include.fetch(filename, options,'script').then(function(content) {
-              //add sourceURL for easier debugging
-              i.innerHTML = '//# sourceURL=' + filename + '\n\n' + content;
-              s.appendChild(i);
-              resolve(i);
-            },
-            reject);
+          include.fetch(filename, options,'script')
+          .then(function(content) {
+            //add sourceURL for easier debugging
+            i.innerHTML = '//# sourceURL=' + filename + '\n\n' + content;
+            s.appendChild(i);
+            return i;
+          })
+          .then(resolve,reject);
         } else {
           i.onload = function(e) {
             //stop double firing
@@ -69,14 +70,15 @@
         var i = document.createElement('link');
         //can't fetch/store external scripts
         if (options.store && !filename.match(/^(http|file)/)) {
-          include.fetch(filename, options, 'style').then(function(content) {
-              i = document.createElement('style');
-              //add sourceURL for easier debugging
-              i.innerHTML = '/*# sourceURL=' + filename + ' */\n\n' + content;
-              s.appendChild(i);
-              resolve(i);
-            },
-            reject);
+          include.fetch(filename, options, 'style')
+          .then(function(content) {
+            i = document.createElement('style');
+            //add sourceURL for easier debugging
+            i.innerHTML = '/*# sourceURL=' + filename + ' */\n\n' + content;
+            s.appendChild(i);
+            return i;
+          })
+          .then(resolve,reject);
         } else {
           i.onload = function(e) {
             this.onreadystatechange = null;
@@ -109,16 +111,15 @@
               f.appendChild(d.firstChild);
             }
             //return a documentFragment from the loaded html.
-            resolve(f);
-          },
-          reject);
+            return f;
+          })
+          .then(resolve,reject);
       },
       'json': function includeJsonLoader(filename, options, resolve, reject) {
         //attempt to load via fetching
-        include.fetch(filename, options,'json').then(function(content) {
-            resolve(JSON.parse(content));
-          },
-          reject);
+        include.fetch(filename, options,'json')
+        .then(JSON.parse)
+        .then(resolve,reject);
       },
       // method for loading text/unknown content
       'text': function includeHtmlLoader(filename, options, resolve, reject) {
@@ -225,7 +226,7 @@
     }
     //filename is pending or hasn't been included yet.
     else {
-      if (type = '?') {
+      if (type === '?') {
         var extensions = filename.toLowerCase().split('.');
         // allow type resolvers to have multiple parts
         // so 'template.html' will be different than 'html'
