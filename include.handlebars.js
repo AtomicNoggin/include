@@ -7,7 +7,7 @@
  * with  with the following format:
  *
 {{!--[include]
-  
+
 -- inline comments must start with two dashes and a space.
 https://example.com/each/file/on/their/own/line.js
 https://example.com/each/file/on/their/own/line.hbp.html
@@ -29,7 +29,7 @@ https://example.com/each/file/on/their/own/line.css
  * then register include in handlebars as follows:
  * handlebarsInclude(Handlebars,include);
  **/
-function handleBarsInclude(Handlebars,include) {
+function handlebarsInclude(Handlebars,include) {
   var _hbCompile = Handlebars.compile.bind(Handlebars);
   var _hbRegisterPartial = Handlebars.registerPartial.bind(Handlebars);
   Handlebars.compile = function() {
