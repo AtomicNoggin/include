@@ -51,7 +51,6 @@ Static methods for more details.
  - files will be loaded via fetch, so be aware of CORS concerns.
  - Resolved promises and/or callbacks will receive the file content.
 
-
 ## USAGE:
 ```js
 //simple usage. asynchronously load another file.
@@ -86,21 +85,22 @@ include('filename.js',{store:true,expires:false,version:3}[,callback]);
 //specify file types (see include.typeLoader for more info)
 include('/some/api/endpoint/','json'[,callback]);
 ```
+
 ## STATIC METHODS:
 
 ### include.next
 return a wrapper function to chain includes
-as a callback -- will fire on success or fail.
 ```js
+// as a callback -- will fire on success or fail.
 include('filename.js'[,type][,options],include.next('needs-filename.js'[,type][,options][,callbackFunc]));
-// in a promise
+// in a promise chain
 include('filename.js')
- .then(include.next('needs-filename.js'[,type][,options][,callbackFunc]))
+ .then(include.next('needs-filename.js'[,type][,options]))
  .then(function() {console.log('fires after needs-filename.js is loaded')});
 ```
 ### include.polyfill
 assert-like function that will optionally load a file if the first argument resolves to false
-otherwice return a resolved promise and optionally fire any callback provided
+otherwise return a resolved promise and optionally fire any callback provided
 ```js
 include.polyfill(window.customElements,'my-polyfill.js'[,type][,options][,callbackFunc]).then(function() {
    doStuff();
@@ -153,7 +153,7 @@ You can also set type specific options. These will be override/inherit global de
 ```js
  include.defaultOption(options, 'javascript');
 ```
-*NOTE*: these options can be overridden in the include options object.
+*NOTE*: these options can also be overridden in the include options object.
 
 ### include.typeLoader
 define a custom loader script.
@@ -192,13 +192,15 @@ include.typeLoader('typeName',
   }
 });
 //optionally send an array of pseudonyms for a single typeLoader
-include.typeLoader(['template','handlebars','hbt.html'],
+include.typeLoader(['handlebars-template','hbt.html'],
   function typeLoader(filename, options, resolve , reject) {...}
 );
 // or set a synonym/file extension for an existing typeLoader
 include.typeLoader('mjs','script');
 ```
 *NOTE*: to take advantage of localStorage caching, use include.fetch to do the actual file loading.
+*see also*: include.handlebars.js for an example typeLoader extension.
+
 
 ### include.extendedUrl
 resolve a filename to it's absolute path.
