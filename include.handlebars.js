@@ -67,12 +67,12 @@ function handlebarsInclude(Handlebars,include) {
   }
   include.typeLoader(['handlebars-template','hbt.html'],function(filename,options,resolve,reject) {
     //get file, then compile it then return the compiled function
-    fetch(filename,options,'handlebars-template').then(Handlebars.compile).then(resolve,reject);
+    include.fetch(filename,options,'handlebars-template').then(Handlebars.compile).then(resolve,reject);
   });
   include.typeLoader(['handlebars-partial','hbp.html'],function(filename,options,resolve,reject) {
     //get file, then compile it then return the compiled function
     var name = filename.split('/').pop().split('.')[0];
-    fetch(filename,options,'handlebars-partial').then(function(template) {
+    include.fetch(filename,options,'handlebars-partial').then(function(template) {
       return Handlebars.registerPartial(name,template);
     }).then(resolve,reject);
   });
