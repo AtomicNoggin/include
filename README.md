@@ -199,6 +199,7 @@ include.typeLoader(['handlebars-template','hbt.html'],
 include.typeLoader('mjs','script');
 ```
 *NOTE*: to take advantage of localStorage caching, use include.fetch to do the actual file loading.
+
 *see also*: include.handlebars.js for an example typeLoader extension.
 
 

@@ -323,9 +323,8 @@
   }
   //return a function that returns an include promise, for chaining
   scope.include.next = function includeNext(filename, type, options, callback) {
-    var args = arguments;
     return function nextWrapper() {
-      return scope.include(filename, type, option, callback);
+      return scope.include(filename, type, options, callback);
     }
   }
   //extend the file types you can load
@@ -403,15 +402,17 @@
   scope.include.filenames = function includeFilenames(includePending) {
     return Object.keys(included).concat(includePending ? Object.keys(pending) : []);
   }
-  //load a file using the fetch api. Thows an error for 4xx & 5xx staus codes.
+  //load a file using the fetch api. Throws an error for 4xx & 5xx staus codes.
   scope.include.fetch = function includeFetch(filename, options, type) {
     options = getDefaultOptions(options || {}, type);
     var storage = (store == ''+store && store.toLowerCase() === 'session' ? sessionStorage : localStorage);
-    if (options.store &&
-      (stored = storage.getItem(filename))) {
+    if (options.store && (stored = storage.getItem(filename))) {
       if ((options.version && options.version <= stored.version) ||
         (options.expires && stored.expires >= Date.now())) {
         return Promise.resolve(stored.value)
+      }
+      else {
+        storage.removeItem(filename);
       }
     }
     var init = {
@@ -420,22 +421,25 @@
       mode: options.mode,
       cache: options.cache
     };
-    return fetch(filename, init).then(
-      function postIncludeFetch(response) {
-        if (!response.ok) {
-          throw new TypeError(response.status + ': ' + response.statusText);
-        } else {
-          if (options.store) {
-            var stored = {
-              'value': text,
-              'version': options.version || null,
-              'expires': options.expires ? Date.now() + (options.expires === !!options.expires ? 172800 /*48 hrs*/ : options.expires) : null
-            }
-            storage.setItem(filename, stored);
-          }
-          return response.text();
-        }
+    return fetch(filename, init)
+    .then(function postIncludeFetch(response) {
+      if (!response.ok) {
+        throw new TypeError(response.status + ': ' + response.statusText);
+      } else {
+        return response.text();
       }
-    );
+    })
+    .then(function storeTextIfNeeded(text) {
+      if (options.store) {
+        var stored = {
+          'value': text,
+          'type': type,
+          'version': options.version || null,
+          'expires': options.expires ? Date.now() + (options.expires === !!options.expires ? 172800 /*48 hrs*/ : options.expires) : null
+        }
+        storage.setItem(filename, stored);
+      }
+      return text;
+    });
   }
 })(window);
