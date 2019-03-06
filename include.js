@@ -242,7 +242,8 @@
       //return the pending promise or a new Promise
       promise = pending[filename] = pending[filename] || new Promise(function includeResolver(resolve, reject) {
         //on success
-        function includeResolverLoad(item) {
+        function includeResolverLoad(data) {
+          data =  typeof data === 'undefined' ? true : data;
           delete pending[filename];
           if (deferred[filename]) {
             //wait for include.register to manually resolve this promise
@@ -250,7 +251,7 @@
           } else {
             //only if the file hasn't registered itself.
             if (typeof included[filename] !== 'undefined') {
-              include.register(filename, item);
+              include.register(filename, data);
             }
             resolve(included[filename]);
           }
