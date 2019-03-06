@@ -26,10 +26,8 @@ Static methods for more details.
  - optionally specify the parent node to insert script into with
    `options.parent`, otherwise it will use the parent node of the
    first script tag in the page.
-
-Resolved promises and/or callbacks will receive true, or any object
-registered with `include.register` by the loaded script.
-
+ - resolved promises and/or callbacks will receive a reference to the script tag,
+   or any object registered with `include.register` by the loaded script.
 
 ## When loading css files,
  - same-origin files loaded with `options.store` set to true will be loaded
@@ -37,13 +35,13 @@ registered with `include.register` by the loaded script.
  - all other requests will load via a `<link src>` tag
  - optionally specify the parent node to insert script into with
    `options.parent`, otherwise it will use the HEAD tag
-
-Resolved promises and/or callbacks will recieve true
+ - resolved promises and/or callbacks will receive a reference to the added tag.
 
 ## When loading html files,
  - files will be loaded via fetch, so be aware of CORS concerns.
  - Resolved promises and/or callbacks will receive a documentFragment containing
    the parsed file content.
+
 ## When loading json files,
  - files will be loaded via fetch, so be aware of CORS concerns.
  - Resolved promises and/or callbacks will receive a js object containing the

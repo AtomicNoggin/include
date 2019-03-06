@@ -38,14 +38,14 @@
               //add sourceURL for easier debugging
               i.innerHTML = '//# sourceURL=' + filename + '\n\n' + content;
               s.appendChild(i);
-              resolve(true);
+              resolve(i);
             },
             reject);
         } else {
           i.onload = function(e) {
             //stop double firing
             this.onreadystatechange = null;
-            resolve('onload');
+            resolve(i);
           }
           i.onerror = function(e) {
             //stop double firing
@@ -56,7 +56,7 @@
             if (this.readyState == "complete") {
               //stop IE<9 from double firing.
               this.onload = this.onerror = null;
-              resolve('readystate');
+              resolve(i);
             }
           }
           i.src = filename;
@@ -74,13 +74,13 @@
               //add sourceURL for easier debugging
               i.innerHTML = '/*# sourceURL=' + filename + ' */\n\n' + content;
               s.appendChild(i);
-              resolve(true);
+              resolve(i);
             },
             reject);
         } else {
           i.onload = function(e) {
             this.onreadystatechange = null;
-            resolve('onload');
+            resolve(i);
           }
           i.onerror = function(e) {
             this.onreadystatechange = null;
@@ -89,7 +89,7 @@
           i.onreadystatechange = function(e) {
             if (this.readyState == "complete") {
               this.onload = this.onerror = null;
-              resolve('readystate');
+              resolve(i);
             }
           }
           i.rel = 'stylesheet';
@@ -113,7 +113,7 @@
           },
           reject);
       },
-      'json': function inncludeJsonLoader(filename, options, resolve, reject) {
+      'json': function includeJsonLoader(filename, options, resolve, reject) {
         //attempt to load via fetching
         include.fetch(filename, options,'json').then(function(content) {
             resolve(JSON.parse(content));
@@ -242,7 +242,7 @@
       //return the pending promise or a new Promise
       promise = pending[filename] = pending[filename] || new Promise(function includeResolver(resolve, reject) {
         //on success
-        function includeResolverLoad(event) {
+        function includeResolverLoad(item) {
           delete pending[filename];
           if (deferred[filename]) {
             //wait for include.register to manually resolve this promise
@@ -250,7 +250,7 @@
           } else {
             //only if the file hasn't registered itself.
             if (typeof included[filename] !== 'undefined') {
-              include.register(filename, true);
+              include.register(filename, item);
             }
             resolve(included[filename]);
           }
