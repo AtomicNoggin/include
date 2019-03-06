@@ -1,17 +1,19 @@
 /**
  * handlebarsInclude
  *
- * Uses include to extend Handlebars to allow loading required files
- * within template files. To specifiey files to load you need to
- * start a template or partial with a handlebars comment with the following
- * format:
+ * Uses include to extend Handlebars to allow loading secondary files
+ * from within template files. To specify files to load, you need to
+ * insert a handlebars comment at the top of a template or partial
+ * with  with the following format:
  *
 {{!--[include]
-
--- inline comments must start with two dashes and a space. empty lines are ignored.
+  
+-- inline comments must start with two dashes and a space.
 https://example.com/each/file/on/their/own/line.js
 https://example.com/each/file/on/their/own/line.hbp.html
 https://example.com/each/file/on/their/own/line.css
+
+-- empty lines are ignored.
 
 --}}
 
